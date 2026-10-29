@@ -1,0 +1,629 @@
+{
+  "algorithm": "Multinomial Logistic Regression (Scikit-Learn)",
+  "dataset_file": "symptom_disease_dataset.csv",
+  "total_records": 720,
+  "train_records": 576,
+  "test_records": 144,
+  "num_features": 42,
+  "num_classes": 6,
+  "test_accuracy": 1.0,
+  "feature_columns": [
+    "high_fever",
+    "mild_fever",
+    "chills",
+    "fatigue",
+    "lethargy",
+    "malaise",
+    "muscle_pain",
+    "weight_loss",
+    "obesity",
+    "restlessness",
+    "headache",
+    "continuous_sneezing",
+    "runny_nose",
+    "congestion",
+    "sinus_pressure",
+    "throat_irritation",
+    "loss_of_smell",
+    "redness_of_eyes",
+    "blurred_and_distorted_vision",
+    "visual_disturbances",
+    "dizziness",
+    "loss_of_balance",
+    "lack_of_concentration",
+    "stiff_neck",
+    "irritability",
+    "cough",
+    "phlegm",
+    "mucoid_sputum",
+    "breathlessness",
+    "chest_pain",
+    "swelled_lymph_nodes",
+    "polyuria",
+    "increased_appetite",
+    "excessive_hunger",
+    "irregular_sugar_level",
+    "vomiting",
+    "diarrhoea",
+    "dehydration",
+    "sunken_eyes",
+    "indigestion",
+    "acidity",
+    "family_history"
+  ],
+  "symptoms": [
+    {
+      "id": "high_fever",
+      "label": "High Fever",
+      "category": "General & Whole Body",
+      "keywords": [
+        "high fever",
+        "fever",
+        "temperature",
+        "hot"
+      ]
+    },
+    {
+      "id": "mild_fever",
+      "label": "Mild Fever",
+      "category": "General & Whole Body",
+      "keywords": [
+        "mild fever",
+        "low fever",
+        "slight fever"
+      ]
+    },
+    {
+      "id": "chills",
+      "label": "Chills & Shivering",
+      "category": "General & Whole Body",
+      "keywords": [
+        "chills",
+        "shivering",
+        "cold"
+      ]
+    },
+    {
+      "id": "fatigue",
+      "label": "Fatigue / Feeling Very Tired",
+      "category": "General & Whole Body",
+      "keywords": [
+        "fatigue",
+        "tired",
+        "weak",
+        "exhausted",
+        "low energy"
+      ]
+    },
+    {
+      "id": "lethargy",
+      "label": "Lethargy / Lack of Energy",
+      "category": "General & Whole Body",
+      "keywords": [
+        "lethargy",
+        "sluggish",
+        "drowsy",
+        "no energy"
+      ]
+    },
+    {
+      "id": "malaise",
+      "label": "General Body Discomfort (Malaise)",
+      "category": "General & Whole Body",
+      "keywords": [
+        "malaise",
+        "unwell",
+        "body discomfort",
+        "feeling sick"
+      ]
+    },
+    {
+      "id": "muscle_pain",
+      "label": "Muscle Pain / Body Aches",
+      "category": "General & Whole Body",
+      "keywords": [
+        "muscle pain",
+        "body ache",
+        "aching muscles",
+        "soreness"
+      ]
+    },
+    {
+      "id": "weight_loss",
+      "label": "Unexplained Weight Loss",
+      "category": "General & Whole Body",
+      "keywords": [
+        "weight loss",
+        "losing weight",
+        "thin"
+      ]
+    },
+    {
+      "id": "obesity",
+      "label": "Overweight / Obesity",
+      "category": "General & Whole Body",
+      "keywords": [
+        "obesity",
+        "overweight",
+        "heavy weight"
+      ]
+    },
+    {
+      "id": "restlessness",
+      "label": "Restlessness / Trouble Relaxing",
+      "category": "General & Whole Body",
+      "keywords": [
+        "restless",
+        "restlessness",
+        "uneasy"
+      ]
+    },
+    {
+      "id": "headache",
+      "label": "Headache",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "headache",
+        "head pain",
+        "throbbing head",
+        "migraine"
+      ]
+    },
+    {
+      "id": "continuous_sneezing",
+      "label": "Continuous Sneezing",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "sneezing",
+        "sneeze"
+      ]
+    },
+    {
+      "id": "runny_nose",
+      "label": "Runny Nose",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "runny nose",
+        "nasal drip"
+      ]
+    },
+    {
+      "id": "congestion",
+      "label": "Nasal Congestion / Stuffy Nose",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "congestion",
+        "stuffy nose",
+        "blocked nose"
+      ]
+    },
+    {
+      "id": "sinus_pressure",
+      "label": "Sinus Pressure (Around Eyes/Forehead)",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "sinus",
+        "sinus pressure",
+        "face pressure"
+      ]
+    },
+    {
+      "id": "throat_irritation",
+      "label": "Sore or Irritated Throat",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "throat",
+        "sore throat",
+        "scratchy throat",
+        "throat irritation"
+      ]
+    },
+    {
+      "id": "loss_of_smell",
+      "label": "Loss of Smell",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "smell",
+        "loss of smell"
+      ]
+    },
+    {
+      "id": "redness_of_eyes",
+      "label": "Red or Watery Eyes",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "red eyes",
+        "redness of eyes",
+        "watery eyes"
+      ]
+    },
+    {
+      "id": "blurred_and_distorted_vision",
+      "label": "Blurred or Distorted Vision",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "blurred vision",
+        "blurry",
+        "vision",
+        "sight"
+      ]
+    },
+    {
+      "id": "visual_disturbances",
+      "label": "Visual Disturbances / Sensitivity to Light",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "visual",
+        "flashing lights",
+        "aura",
+        "bright light"
+      ]
+    },
+    {
+      "id": "dizziness",
+      "label": "Dizziness / Lightheadedness",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "dizzy",
+        "dizziness",
+        "lightheaded",
+        "vertigo"
+      ]
+    },
+    {
+      "id": "loss_of_balance",
+      "label": "Loss of Balance / Unsteadiness",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "balance",
+        "loss of balance",
+        "unsteady"
+      ]
+    },
+    {
+      "id": "lack_of_concentration",
+      "label": "Difficulty Concentrating",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "concentration",
+        "focus",
+        "brain fog"
+      ]
+    },
+    {
+      "id": "stiff_neck",
+      "label": "Stiff Neck",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "stiff neck",
+        "neck pain"
+      ]
+    },
+    {
+      "id": "irritability",
+      "label": "Irritability / Mood Changes",
+      "category": "Head, Eyes, Nose & Throat",
+      "keywords": [
+        "irritable",
+        "irritability",
+        "mood swings"
+      ]
+    },
+    {
+      "id": "cough",
+      "label": "Cough",
+      "category": "Chest & Breathing",
+      "keywords": [
+        "cough",
+        "coughing",
+        "dry cough"
+      ]
+    },
+    {
+      "id": "phlegm",
+      "label": "Phlegm / Mucus in Throat",
+      "category": "Chest & Breathing",
+      "keywords": [
+        "phlegm",
+        "mucus",
+        "sputum"
+      ]
+    },
+    {
+      "id": "mucoid_sputum",
+      "label": "Thick Mucus Cough (Mucoid Sputum)",
+      "category": "Chest & Breathing",
+      "keywords": [
+        "mucoid",
+        "thick mucus",
+        "wheezing cough"
+      ]
+    },
+    {
+      "id": "breathlessness",
+      "label": "Shortness of Breath (Breathlessness)",
+      "category": "Chest & Breathing",
+      "keywords": [
+        "breathless",
+        "breathlessness",
+        "shortness of breath",
+        "difficulty breathing"
+      ]
+    },
+    {
+      "id": "chest_pain",
+      "label": "Chest Pain or Tightness",
+      "category": "Chest & Breathing",
+      "keywords": [
+        "chest pain",
+        "chest tightness",
+        "heavy chest"
+      ]
+    },
+    {
+      "id": "swelled_lymph_nodes",
+      "label": "Swollen Glands in Neck (Lymph Nodes)",
+      "category": "Chest & Breathing",
+      "keywords": [
+        "lymph nodes",
+        "swollen glands",
+        "neck swelling"
+      ]
+    },
+    {
+      "id": "polyuria",
+      "label": "Frequent Urination (Polyuria)",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "frequent urination",
+        "polyuria",
+        "peeing a lot",
+        "bathroom trips"
+      ]
+    },
+    {
+      "id": "increased_appetite",
+      "label": "Increased Appetite / Constant Thirst",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "increased appetite",
+        "thirsty",
+        "thirst",
+        "drinking water"
+      ]
+    },
+    {
+      "id": "excessive_hunger",
+      "label": "Excessive Hunger",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "excessive hunger",
+        "hungry",
+        "always hungry"
+      ]
+    },
+    {
+      "id": "irregular_sugar_level",
+      "label": "Irregular Blood Sugar Readings",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "sugar level",
+        "high sugar",
+        "blood sugar",
+        "glucose"
+      ]
+    },
+    {
+      "id": "vomiting",
+      "label": "Vomiting / Throwing Up",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "vomiting",
+        "vomit",
+        "throwing up",
+        "nausea"
+      ]
+    },
+    {
+      "id": "diarrhoea",
+      "label": "Diarrhea / Loose Motions",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "diarrhea",
+        "diarrhoea",
+        "loose motion",
+        "watery stool"
+      ]
+    },
+    {
+      "id": "dehydration",
+      "label": "Dehydration / Dry Mouth",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "dehydration",
+        "dehydrated",
+        "dry mouth"
+      ]
+    },
+    {
+      "id": "sunken_eyes",
+      "label": "Sunken or Tired Eyes (From Fluid Loss)",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "sunken eyes",
+        "dark circles",
+        "fluid loss"
+      ]
+    },
+    {
+      "id": "indigestion",
+      "label": "Indigestion / Stomach Upset",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "indigestion",
+        "stomach upset",
+        "acidity",
+        "gas"
+      ]
+    },
+    {
+      "id": "acidity",
+      "label": "Acidity / Heartburn",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "acidity",
+        "heartburn",
+        "acid reflux",
+        "burning stomach"
+      ]
+    },
+    {
+      "id": "family_history",
+      "label": "Family History of Chronic Illness",
+      "category": "Stomach, Thirst & Digestion",
+      "keywords": [
+        "family history",
+        "parents",
+        "hereditary"
+      ]
+    }
+  ],
+  "diseases": {
+    "Common Cold": {
+      "name": "Common Cold (Upper Respiratory Infection)",
+      "short_desc": "A viral infection of the nose, sinus, and throat passages.",
+      "urgency": "Mild to Moderate \u2014 Typically resolves within 5 to 7 days",
+      "doctor_type": "General Physician / Family Doctor",
+      "what_to_do": [
+        "Get plenty of rest and drink warm fluids (water, clear broths, warm lemon water) to ease congestion.",
+        "Gargle with warm salt water to soothe throat irritation and use steam inhalation for a stuffy nose.",
+        "Consult a physician if high fever persists beyond 3 days or if chest pain develops."
+      ],
+      "warning_signs": "Seek medical care if you develop severe shortness of breath, persistent high fever, or sharp chest pain."
+    },
+    "Diabetes": {
+      "name": "Diabetes (Hyperglycemia / Metabolic Disorder)",
+      "short_desc": "A chronic metabolic condition characterized by elevated blood glucose levels and insulin resistance.",
+      "urgency": "Important \u2014 Schedule a confirmatory lab blood test",
+      "doctor_type": "General Physician or Endocrinologist / Diabetologist",
+      "what_to_do": [
+        "Schedule a Fasting Blood Glucose test and HbA1c test at a medical laboratory.",
+        "Use the 'Diabetes Lab Assessment' tab above to evaluate your exact Glucose, BMI, and Blood Pressure numbers.",
+        "Reduce sugary beverages and refined carbohydrates, stay hydrated with water, and walk 20\u201330 minutes daily."
+      ],
+      "warning_signs": "Seek prompt medical care if you experience extreme thirst, rapid weight loss, blurry vision, or confusion."
+    },
+    "Hypertension": {
+      "name": "Hypertension (High Blood Pressure)",
+      "short_desc": "Elevated arterial blood pressure placing extra strain on the heart and blood vessels.",
+      "urgency": "High Priority \u2014 Measure blood pressure and consult a doctor",
+      "doctor_type": "Cardiologist or General Physician",
+      "what_to_do": [
+        "Sit quietly for 5 minutes and measure your blood pressure using a calibrated cuff or at a clinic.",
+        "Reduce dietary sodium (salt), avoid caffeine and tobacco, and rest if feeling dizzy.",
+        "Schedule an appointment with a physician for blood pressure monitoring and cardiovascular evaluation."
+      ],
+      "warning_signs": "If chest pain radiates to the arm or jaw, or you experience severe shortness of breath, seek emergency care immediately."
+    },
+    "Migraine": {
+      "name": "Migraine",
+      "short_desc": "A recurrent neurological headache disorder often accompanied by visual changes and sensitivity.",
+      "urgency": "Moderate \u2014 Manageable with rest and targeted treatment",
+      "doctor_type": "General Physician or Neurologist",
+      "what_to_do": [
+        "Rest in a quiet, darkened room and apply a cool compress to your forehead or back of the neck.",
+        "Stay hydrated with water and avoid bright screens, loud noises, and skipped meals.",
+        "Consult a doctor for preventive or acute migraine medication if episodes recur."
+      ],
+      "warning_signs": "Seek urgent care if a headache is sudden and severe, or is accompanied by high fever, stiff neck, or confusion."
+    },
+    "Gastroenteritis": {
+      "name": "Gastroenteritis (Stomach Flu / Digestive Infection)",
+      "short_desc": "Inflammation of the stomach and intestines causing vomiting, diarrhea, and fluid loss.",
+      "urgency": "Moderate \u2014 Priority is preventing dehydration with ORS",
+      "doctor_type": "General Physician or Gastroenterologist",
+      "what_to_do": [
+        "Drink Oral Rehydration Solution (ORS), coconut water, or clear broths in small, frequent sips.",
+        "Eat bland, easily digestible foods (rice, bananas, curd, toast) and avoid spicy, fried, or dairy-heavy meals.",
+        "See a doctor if vomiting or diarrhea lasts longer than 24\u201348 hours."
+      ],
+      "warning_signs": "Seek immediate care for severe dehydration (sunken eyes, inability to keep fluids down, dizziness on standing)."
+    },
+    "Bronchial Asthma": {
+      "name": "Bronchial Asthma (Airway Inflammation)",
+      "short_desc": "Narrowing and swelling of the airways with extra mucus, causing cough and breathlessness.",
+      "urgency": "Important \u2014 Requires medical evaluation and inhaler guidance",
+      "doctor_type": "Pulmonologist or General Physician",
+      "what_to_do": [
+        "Sit upright in a comfortable position and take slow, steady breaths; use a prescribed rescue inhaler if you have one.",
+        "Move away from smoke, dust, cold air, or strong fumes that may trigger airway irritation.",
+        "Consult a physician for lung function testing (spirometry) and an asthma action plan."
+      ],
+      "warning_signs": "Seek emergency care immediately if breathlessness makes it hard to speak in full sentences or lips/fingertips turn bluish."
+    }
+  },
+  "disease_symptom_map": {
+    "Common Cold": [
+      "high_fever",
+      "chills",
+      "fatigue",
+      "malaise",
+      "muscle_pain",
+      "headache",
+      "continuous_sneezing",
+      "runny_nose",
+      "congestion",
+      "sinus_pressure",
+      "throat_irritation",
+      "loss_of_smell",
+      "redness_of_eyes",
+      "cough",
+      "phlegm",
+      "chest_pain",
+      "swelled_lymph_nodes"
+    ],
+    "Diabetes": [
+      "fatigue",
+      "lethargy",
+      "weight_loss",
+      "obesity",
+      "restlessness",
+      "blurred_and_distorted_vision",
+      "polyuria",
+      "increased_appetite",
+      "excessive_hunger",
+      "irregular_sugar_level"
+    ],
+    "Hypertension": [
+      "headache",
+      "dizziness",
+      "loss_of_balance",
+      "lack_of_concentration",
+      "chest_pain"
+    ],
+    "Migraine": [
+      "headache",
+      "blurred_and_distorted_vision",
+      "visual_disturbances",
+      "stiff_neck",
+      "irritability",
+      "excessive_hunger",
+      "indigestion",
+      "acidity"
+    ],
+    "Gastroenteritis": [
+      "vomiting",
+      "diarrhoea",
+      "dehydration",
+      "sunken_eyes"
+    ],
+    "Bronchial Asthma": [
+      "high_fever",
+      "fatigue",
+      "cough",
+      "mucoid_sputum",
+      "breathlessness",
+      "family_history"
+    ]
+  }
+}
