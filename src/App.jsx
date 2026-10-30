@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import symptomWeights from './symptom_weights.json';
 
 const DEFAULT_SYMPTOMS = [
   // General & Whole Body
@@ -188,13 +189,105 @@ function buildDiabetesActionPlan(inputs, probability) {
   return actions;
 }
 
+const PIMA_PIPELINE_STATS = {
+  intercept: -0.8722,
+  features: {
+    preg: { median: 3.0, mean: 3.819, std: 3.311, coef: 0.3774 },
+    plas: { median: 117.0, mean: 121.671, std: 29.979, coef: 1.1826 },
+    pres: { median: 72.0, mean: 72.14, std: 12.265, coef: -0.0441 },
+    skin: { median: 29.0, mean: 29.042, std: 8.885, coef: 0.0283 },
+    insu: { median: 125.0, mean: 137.705, std: 78.701, coef: -0.0661 },
+    mass: { median: 32.4, mean: 32.448, std: 6.819, coef: 0.6887 },
+    pedi: { median: 0.383, mean: 0.477, std: 0.33, coef: 0.2333 },
+    age: { median: 29.0, mean: 33.366, std: 11.824, coef: 0.1478 },
+  },
+};
+
+function evaluateDiabetesPipeline(values) {
+  const zeroImputed = new Set(['plas', 'pres', 'skin', 'insu', 'mass']);
+  let logit = PIMA_PIPELINE_STATS.intercept;
+  Object.entries(PIMA_PIPELINE_STATS.features).forEach(([key, st]) => {
+    const raw = Number(values[key] ?? 0);
+    const eff = zeroImputed.has(key) && raw === 0 ? st.median : raw;
+    const z = (eff - st.mean) / st.std;
+    logit += z * st.coef;
+  });
+  const prob = 1 / (1 + Math.exp(-logit));
+  return {
+    prediction: prob >= 0.5 ? 1 : 0,
+    probability: Number(prob.toFixed(4)),
+  };
+}
+
+function evaluateSymptomPipeline(selectedIds) {
+  const selected = new Set(selectedIds);
+  const featureCols = symptomWeights.feature_columns;
+  const classes = symptomWeights.classes;
+  const coef = symptomWeights.coef;
+  const intercept = symptomWeights.intercept;
+  const diseases = symptomWeights.diseases;
+  const diseaseSymptomMap = symptomWeights.disease_symptom_map;
+  const symptomsList = symptomWeights.symptoms;
+
+  // Step 1: Build binary feature vector
+  const x = featureCols.map((col) => (selected.has(col) ? 1.0 : 0.0));
+
+  // Step 2: Normalizer(norm="l2")
+  const norm = Math.sqrt(x.reduce((acc, v) => acc + v * v, 0));
+  const xNorm = norm > 0 ? x.map((v) => v / norm) : x;
+
+  // Step 3: Multinomial Logistic Regression logits (x_norm · coef^T + intercept)
+  const logits = classes.map((_, cIdx) => {
+    let sum = intercept[cIdx];
+    for (let j = 0; j < featureCols.length; j += 1) {
+      sum += xNorm[j] * coef[cIdx][j];
+    }
+    return sum;
+  });
+
+  // Softmax probabilities
+  const maxLogit = Math.max(...logits);
+  const exps = logits.map((l) => Math.exp(l - maxLogit));
+  const sumExps = exps.reduce((a, b) => a + b, 0);
+  const probs = exps.map((e) => e / sumExps);
+
+  const ranked = classes
+    .map((dKey, idx) => {
+      const dInfo = diseases[dKey];
+      const activeSet = new Set(diseaseSymptomMap[dKey] || []);
+      const matched = symptomsList
+        .filter((s) => selected.has(s.id) && activeSet.has(s.id))
+        .map((s) => s.label);
+
+      return {
+        id: dKey,
+        name: dInfo.name,
+        probability: Number(probs[idx].toFixed(4)),
+        short_desc: dInfo.short_desc,
+        urgency: dInfo.urgency,
+        doctor_type: dInfo.doctor_type,
+        what_to_do: dInfo.what_to_do,
+        warning_signs: dInfo.warning_signs,
+        matched_symptoms: matched,
+      };
+    })
+    .sort((a, b) => b.probability - a.probability);
+
+  return {
+    selected_count: selected.size,
+    top_prediction: ranked[0],
+    all_predictions: ranked,
+  };
+}
+
 async function apiFetch(endpoint, options) {
-  try {
-    const res = await fetch(`http://127.0.0.1:8005${endpoint}`, options);
-    if (res.ok) return res.json();
-  } catch {}
-  const res = await fetch(endpoint, options);
-  if (res.ok) return res.json();
+  const bases = ['http://127.0.0.1:8005', 'http://127.0.0.1:8000', ''];
+  for (const base of bases) {
+    try {
+      const res = await fetch(`${base}${endpoint}`, options);
+      if (res.ok) return await res.json();
+    } catch {}
+  }
   throw new Error('Request failed');
 }
 
@@ -241,12 +334,18 @@ export default function App() {
     return groups;
   }, [symptomsCatalog]);
 
-  // Execute ML prediction on backend when symptoms change
+  // Execute ML prediction when symptoms change (instant trained-weight evaluation + backend sync)
   useEffect(() => {
     let cancelled = false;
     if (selectedSymptoms.length === 0) {
       setDiseaseResult(null);
       return undefined;
+    }
+
+    // Immediate evaluation using exact scikit-learn trained weights
+    const localPred = evaluateSymptomPipeline(selectedSymptoms);
+    if (localPred) {
+      setDiseaseResult(localPred);
     }
 
     setLoadingSymptomPred(true);
@@ -334,9 +433,11 @@ export default function App() {
     }
   };
 
-  // Execute Diabetes ML model on backend when inputs change
+  // Execute Diabetes ML model when inputs change (instant trained-weight evaluation + backend sync)
   useEffect(() => {
     let cancelled = false;
+    setPrediction(evaluateDiabetesPipeline(inputs));
+
     apiFetch('/api/predict', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

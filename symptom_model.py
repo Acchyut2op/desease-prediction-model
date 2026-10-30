@@ -377,6 +377,11 @@ def train_symptom_model():
         active_syms = [col for col, val in prevalence.items() if val > 0.05]
         disease_symptom_map[d_name] = active_syms
 
+    lr_step = clf.named_steps["logisticregression"]
+    classes_list = [str(c) for c in lr_step.classes_]
+    coef_matrix = [[round(float(v), 6) for v in row] for row in lr_step.coef_]
+    intercept_list = [round(float(v), 6) for v in lr_step.intercept_]
+
     metadata = {
         "algorithm": "Multinomial Logistic Regression (Scikit-Learn)",
         "dataset_file": "symptom_disease_dataset.csv",
@@ -387,6 +392,9 @@ def train_symptom_model():
         "num_classes": int(len(TARGET_DISEASES)),
         "test_accuracy": round(float(acc), 4),
         "feature_columns": feature_cols,
+        "classes": classes_list,
+        "coef": coef_matrix,
+        "intercept": intercept_list,
         "symptoms": symptoms_list,
         "diseases": DISEASE_GUIDANCE,
         "disease_symptom_map": disease_symptom_map,
@@ -394,6 +402,11 @@ def train_symptom_model():
 
     with open(BASE_DIR / "symptom_metadata.json", "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=2)
+
+    src_dir = BASE_DIR / "src"
+    if src_dir.exists():
+        with open(src_dir / "symptom_weights.json", "w", encoding="utf-8") as f:
+            json.dump(metadata, f, indent=2)
 
     return clf, metadata
 
