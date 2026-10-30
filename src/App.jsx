@@ -372,9 +372,11 @@ export default function App() {
   const toggleSymptom = (id) => {
     setDescribeMessage('');
     setUnmatchedQuery('');
-    setSelectedSymptoms((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+    const nextSymptoms = selectedSymptoms.includes(id)
+      ? selectedSymptoms.filter((item) => item !== id)
+      : [...selectedSymptoms, id];
+    setSelectedSymptoms(nextSymptoms);
+    setDiseaseResult(nextSymptoms.length > 0 ? evaluateSymptomPipeline(nextSymptoms) : null);
   };
 
   const handleSymptomSearch = (e) => {
@@ -421,6 +423,7 @@ export default function App() {
     if (matchedIds.length > 0) {
       setUnmatchedQuery('');
       setSelectedSymptoms(matchedIds);
+      setDiseaseResult(evaluateSymptomPipeline(matchedIds));
       setDescribeMessage(`Found and selected ${matchedIds.length} matching symptom(s) for "${rawText}".`);
     } else {
       // Clear any previous loaded symptoms and prediction immediately!
@@ -641,6 +644,7 @@ export default function App() {
                             setUnmatchedQuery('');
                             setDescribeMessage('');
                             setSelectedSymptoms(ex.symptoms);
+                            setDiseaseResult(evaluateSymptomPipeline(ex.symptoms));
                           }}
                         >
                           {ex.name}
